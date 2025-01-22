@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const mongoose = require("mongoose");
 
 const UserSchema = mongoose.Schema({
     email: {
@@ -11,7 +11,7 @@ const UserSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        required: true
+        default: "standard"
     }
 })
 
