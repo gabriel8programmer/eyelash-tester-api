@@ -1,6 +1,6 @@
 const { User } = require("./User")
 
-module.exports = {
+const UsersModel = {
 
     getAll: async () => {
         const users = await User.find({})
@@ -8,19 +8,18 @@ module.exports = {
     },
 
     show: async (_id) => {
-        const user = await User.findById({ _id })
+        const user = await User.findOne({ _id })
         return user
     },
 
     create: async ({ name, email, password, role }) => {
-        const user = new User(name, email, password, role)
+        const user = new User({ name, email, password, role })
         await user.save()
         return user
     },
 
     update: async (_id, { name, email, password }) => {
         const userUpdated = await User.findByIdAndUpdate({ _id }, { name, email, password })
-        await userUpdated.save()
         return userUpdated
     },
 
@@ -29,3 +28,5 @@ module.exports = {
         return userRemoved
     }
 }
+
+module.exports = UsersModel

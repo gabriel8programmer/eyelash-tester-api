@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const EyelashSchema = new mongoose.Schema({
     name: {
-        type: string,
+        type: String,
         required: true
     },
-    style: string,
+    style: String,
     image_url: {
-        type: string,
+        type: String,
         required: true
     }
 })
