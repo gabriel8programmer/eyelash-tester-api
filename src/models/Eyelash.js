@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const EyelashSchema = mongoose.Schema({
+const EyelashSchema = new mongoose.Schema({
     name: {
         type: string,
         required: true

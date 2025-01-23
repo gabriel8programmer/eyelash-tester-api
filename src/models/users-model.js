@@ -1,6 +1,6 @@
 const { User } = require("./User")
 
-const usersModel = {
+module.exports = {
 
     getAll: async () => {
         const users = await User.find({})
@@ -8,30 +8,24 @@ const usersModel = {
     },
 
     show: async (_id) => {
-        const user = await User.findOne(_id)
+        const user = await User.findById({ _id })
         return user
     },
 
-    create: async (email, password, role) => {
-        try {
-            const newUser = new User({ email, password, role })
-            await newUser.save()
-            return newUser
-        } catch (error) {
-            console.log(error.message)
-        }
+    create: async ({ name, email, password, role }) => {
+        const user = new User(name, email, password, role)
+        await user.save()
+        return user
     },
 
-    update: async (_id, data) => {
-        const userUpdated = await User.findOneAndUpdate({ _id }, data)
+    update: async (_id, { name, email, password }) => {
+        const userUpdated = await User.findByIdAndUpdate({ _id }, { name, email, password })
         await userUpdated.save()
-        return userUpated
+        return userUpdated
     },
 
     delete: async (_id) => {
-        const userDeleted = await User.deleteOne({ _id })
-        return userDeleted
+        const userRemoved = await User.findByIdAndDelete({ _id })
+        return userRemoved
     }
 }
-
-module.exports = usersModel
