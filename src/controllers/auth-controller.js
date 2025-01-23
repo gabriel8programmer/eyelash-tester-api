@@ -8,9 +8,7 @@ module.exports = {
     register: async (req, res) => {
         const { name, email, password, role } = req.body
 
-        const users = await UsersModel.getAll()
-
-        const userEmailIsAlreadyExists = users.find(user => user.email === email)
+        const userEmailIsAlreadyExists = UsersModel.getUserByEmail(email)
         if (userEmailIsAlreadyExists) {
             return res.status(404).json({ message: "Email is already to use!" })
         }
@@ -24,8 +22,7 @@ module.exports = {
     login: async (req, res) => {
         const { email, password } = req.body
 
-        const users = await UsersModel.getAll()
-        const user = users.find(user => user.email === email)
+        const user = await UsersModel.getUserByEmail(email)
         if (!user || user.password !== password) {
             return res.status(404).json({ message: "Invalid Credentials!" })
         }
