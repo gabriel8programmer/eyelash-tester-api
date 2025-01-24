@@ -1,13 +1,32 @@
+const eyelashesModel = require("../models/eyelashes-model")
 
 module.exports = {
-    //GET /admin/eyelashes
+    //GET /eyelashes
+    index: async (req, res) => {
+        const eyelashes = await eyelashesModel.getAllEyelashes()
+        res.status(200).json(eyelashes)
+    },
 
-    //GET /admin/eyelashes/:id
+    //GET /eyelashes/:id
+    readOne: async (req, res) => {
+        const { id } = req.params
+        const eyelash = await eyelashesModel.getEyelashById(id)
+        res.status(200).json(eyelash)
+    },
 
-    //POST /admin/eyelashes
+    //POST /eyelashes
+    create: async (req, res) => {
 
-    //PUT /admin/eyelashes/:id
+    },
 
-    //DELETE /admin/eyelashes/:id
+    //PUT /eyelashes/:id
+    update: async (req, res) => {
+
+    },
+
+    //DELETE /eyelashes/:id
+    delete: async (req, res) => {
+
+    }
 
 }

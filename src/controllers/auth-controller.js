@@ -6,30 +6,17 @@ module.exports = {
 
     //POST /auth/register
     register: async (req, res) => {
-        const { name, email, password, role } = req.body
-
-        const userEmailIsAlreadyExists = UsersModel.getUserByEmail(email)
-        if (userEmailIsAlreadyExists) {
-            return res.status(404).json({ message: "Email is already to use!" })
-        }
-
-        const templateUser = { name, email, password, role: role ?? "standard" }
-        const user = await UsersModel.create(templateUser)
+        const { name, email, password } = req.body
+        const templateUser = { name, email, password, role: "standard" }
+        const user = await UsersModel.createUser(templateUser)
         res.status(201).json(user)
     },
 
     //POST /auth/login
     login: async (req, res) => {
-        const { email, password } = req.body
-
-        const user = await UsersModel.getUserByEmail(email)
-        if (!user || user.password !== password) {
-            return res.status(404).json({ message: "Invalid Credentials!" })
-        }
-
+        const { email } = req.body
         const payload = { email }
         const token = jwt.sign(payload, API_SECRET_KEY, { expiresIn: "1h" })
-
-        res.status(200).json({ token })
+        res.status(202).json({ token, message: "Successful login!" })
     }
 }

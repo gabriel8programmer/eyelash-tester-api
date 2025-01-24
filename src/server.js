@@ -2,7 +2,8 @@
 const express = require("express")
 const authRouter = require("./routes/auth")
 const db = require("./config/db")
-const adminRouter = require("./routes/admin")
+const usersRouter = require("./routes/users")
+const eyelashesRouter = require("./routes/eyelashes")
 
 const app = express()
 
@@ -13,7 +14,8 @@ db().then(() => console.log('Connected to MongoDB'))
 app.use(express.json())
 
 app.use("/auth", authRouter)
-app.use("/admin", adminRouter)
+app.use("/admin/users", usersRouter)
+app.use("/admin/eyelashes", eyelashesRouter)
 
 app.listen(3000, () => {
     console.log("Server running in http://localhost:3000/")

@@ -1,6 +1,6 @@
 const { User } = require("./User")
 
-const UsersModel = {
+module.exports = {
 
     getAllUsers: async () => {
         const users = await User.find({})
@@ -23,15 +23,11 @@ const UsersModel = {
         return user
     },
 
-    updateUserById: async (_id, { name, email, password }) => {
-        const userUpdated = await User.findByIdAndUpdate({ _id }, { name, email, password })
-        return userUpdated
+    updateUserById: async (_id, data) => {
+        await User.updateOne({ _id }, data)
     },
 
     deleteUserById: async (_id) => {
-        const userRemoved = await User.findByIdAndDelete({ _id })
-        return userRemoved
+        await User.deleteOne({ _id })
     }
 }
-
-module.exports = UsersModel

@@ -4,7 +4,7 @@ const UsersModel = require("../models/users-model")
 
 module.exports = {
 
-    authMiddleware: (req, res, next) => {
+    authMiddleware: async (req, res, next) => {
         const authHeader = req.headers.authorization
 
         if (!authHeader) {
@@ -17,7 +17,7 @@ module.exports = {
 
             const decodedToken = jwt.verify(token, API_SECRET_KEY)
             const { email } = decodedToken
-            const user = UsersModel.getUserByEmail(email)
+            const user = await UsersModel.getUserByEmail(email)
             if (!user) {
                 return res.status(404).json({ message: "Invalid token!" })
             }
