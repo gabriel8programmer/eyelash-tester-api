@@ -12,8 +12,8 @@ module.exports = {
         return eyelash
     },
 
-    createEyelash: async ({ name, style, image_url }) => {
-        const newEyelash = new Eyelash({ name, style, image_url })
+    createEyelash: async ({ name, image_url }) => {
+        const newEyelash = new Eyelash({ name, image_url })
         await newEyelash.save()
         return newEyelash
     },

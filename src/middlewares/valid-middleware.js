@@ -1,3 +1,4 @@
+const eyelashesModel = require("../models/eyelashes-model")
 const UsersModel = require("../models/users-model")
 
 //utils
@@ -35,6 +36,16 @@ module.exports = {
         const user = await UsersModel.getUserByEmail(email)
         if (!user || user.password !== password) {
             return res.status(401).json({ message: "Invalid email or password!" })
+        } else {
+            next()
+        }
+    },
+
+    eyelashIdValidation: async (req, res, next) => {
+        const { id } = req.params
+        const eyelash = await eyelashesModel.getEyelashById(id)
+        if (!eyelash) {
+            return res.status(404).json({ message: "Eyelash is not found!" })
         } else {
             next()
         }

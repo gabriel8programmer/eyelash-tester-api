@@ -5,7 +5,6 @@ const EyelashSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    style: String,
     image_url: {
         type: String,
         required: true

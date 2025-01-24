@@ -1,7 +1,7 @@
 
 const express = require("express")
-const authRouter = require("./routes/auth")
 const db = require("./config/db")
+const authRouter = require("./routes/auth")
 const usersRouter = require("./routes/users")
 const eyelashesRouter = require("./routes/eyelashes")
 
