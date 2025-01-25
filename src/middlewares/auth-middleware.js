@@ -1,4 +1,3 @@
-const { API_SECRET_KEY } = require("../../env")
 const jwt = require("jsonwebtoken")
 const UsersModel = require("../models/users-model")
 
@@ -15,7 +14,7 @@ module.exports = {
 
         try {
 
-            const decodedToken = jwt.verify(token, API_SECRET_KEY)
+            const decodedToken = jwt.verify(token, process.env.API_SECRET_KEY)
             const { email } = decodedToken
             const user = await UsersModel.getUserByEmail(email)
             if (!user) {

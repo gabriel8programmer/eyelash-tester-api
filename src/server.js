@@ -1,4 +1,6 @@
 
+require("dotenv").config()
+
 const express = require("express")
 const db = require("./config/db")
 const authRouter = require("./routes/auth")
@@ -17,6 +19,7 @@ app.use("/auth", authRouter)
 app.use("/admin/users", usersRouter)
 app.use("/admin/eyelashes", eyelashesRouter)
 
+const PORT = process.env.PORT || 3000
 app.listen(3000, () => {
     console.log("Server running in http://localhost:3000/")
 })
