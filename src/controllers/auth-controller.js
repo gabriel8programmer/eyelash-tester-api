@@ -15,7 +15,7 @@ module.exports = {
     login: async (req, res) => {
         const { email } = req.body
         const payload = { email }
-        const token = jwt.sign(payload, process.env.API_SECRET_KEY, { expiresIn: "1h" })
+        const token = jwt.sign(payload, process.env.API_JWT_SECRET_KEY, { expiresIn: "1h" })
         res.status(202).json({ token, message: "Successful login!" })
     }
 }

@@ -1,5 +1,6 @@
 const eyelashesModel = require("../models/eyelashes-model")
 const UsersModel = require("../models/users-model")
+const bcrypt = require("bcrypt")
 
 //utils
 const isValidEmail = (email) => {
@@ -34,7 +35,7 @@ module.exports = {
     userLoginValidation: async (req, res, next) => {
         const { email, password } = req.body
         const user = await UsersModel.getUserByEmail(email)
-        if (!user || user.password !== password) {
+        if (!user || !bcrypt.compareSync(password, user.password)) {
             return res.status(401).json({ message: "Invalid email or password!" })
         } else {
             next()

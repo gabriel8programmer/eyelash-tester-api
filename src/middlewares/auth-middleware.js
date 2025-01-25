@@ -14,7 +14,7 @@ module.exports = {
 
         try {
 
-            const decodedToken = jwt.verify(token, process.env.API_SECRET_KEY)
+            const decodedToken = jwt.verify(token, process.env.API_JWT_SECRET_KEY)
             const { email } = decodedToken
             const user = await UsersModel.getUserByEmail(email)
             if (!user) {

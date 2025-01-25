@@ -13,6 +13,7 @@ const app = express()
 db().then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Connection error:', err))
 
+
 app.use(express.json())
 
 app.use("/auth", authRouter)
@@ -20,6 +21,6 @@ app.use("/admin/users", usersRouter)
 app.use("/admin/eyelashes", eyelashesRouter)
 
 const PORT = process.env.PORT || 3000
-app.listen(3000, () => {
-    console.log("Server running in http://localhost:3000/")
+app.listen(PORT, () => {
+    console.log(`Server running in http://localhost:${PORT}/`)
 })

@@ -2,7 +2,13 @@
 const mongoose = require("mongoose")
 
 const db = async () => {
-    await mongoose.connect(process.env.DB_URL, {
+
+    const dbPort = process.env.DB_PORT
+    const dbHost = process.env.DB_HOST
+    const db = process.env.DATABASE
+    const dbUrl = `mongodb://${dbHost}:${dbPort}/${db}`
+
+    await mongoose.connect(dbUrl, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     })

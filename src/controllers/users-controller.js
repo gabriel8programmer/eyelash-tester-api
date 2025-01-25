@@ -1,4 +1,5 @@
 const UsersModel = require("../models/users-model")
+const bcrypt = require("bcrypt")
 
 module.exports = {
     //GET /users
@@ -17,7 +18,7 @@ module.exports = {
     //POST /users
     create: async (req, res) => {
         const { name, email, password, role } = req.body
-        const templateUser = { name, email, password, role: role ?? "standard" }
+        const templateUser = { name, email, role: role ?? "standard", password: bcrypt.hashSync(password) }
         const user = await UsersModel.createUser(templateUser)
         res.status(201).json({ data: { ...user }, message: "User saved with success!" })
     },
