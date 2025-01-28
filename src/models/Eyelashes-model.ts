@@ -12,16 +12,13 @@ export class EyelashesModel {
     return eyelash;
   }
 
-  static async create(eyelashData: IEyelash): Promise<IEyelash> {
+  static async create(eyelashData: IEyelash) {
     const eyelashModel = new Eyelash(eyelashData);
-    const eyelash: IEyelash = await eyelashModel.save();
+    const eyelash = await eyelashModel.save();
     return eyelash;
   }
 
-  static async update(
-    _id: string,
-    data: Partial<IEyelash>
-  ): Promise<IEyelash | null> {
+  static async update(_id: string, data: Partial<IEyelash>): Promise<IEyelash | null> {
     const eyelashUpdated: IEyelash | null = await Eyelash.findOneAndUpdate(
       { _id },
       { $set: data },

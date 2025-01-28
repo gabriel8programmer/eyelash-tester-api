@@ -9,5 +9,5 @@ interface IUser {
 
 interface IEyelash {
   name: string;
-  imageUrl: string;
+  imageUrl?: string;
 }

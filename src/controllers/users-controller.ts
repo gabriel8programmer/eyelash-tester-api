@@ -44,9 +44,7 @@ export class usersController {
       if (!user) throw new HttpError(404, "User not found!");
 
       const { password } = parsedBody;
-      parsedBody.password = password
-        ? await bcrypt.hash(password, 10)
-        : user.password;
+      parsedBody.password = password ? await bcrypt.hash(password, 10) : user.password;
 
       const userUpdated = await UsersModel.update(id, parsedBody);
       res.json(userUpdated);
