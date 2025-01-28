@@ -1,6 +1,5 @@
-import { IUser } from "../types";
+import { IUser } from "../types/types";
 import { User } from "./User-schema";
-import { Types } from "mongoose";
 
 export class UsersModel {
   static async findAll(): Promise<IUser[]> {
@@ -8,48 +7,36 @@ export class UsersModel {
     return users;
   }
 
-  static async findById(_id: Types.ObjectId): Promise<IUser | null> {
+  static async findById(_id: string): Promise<IUser | null> {
     const user: IUser | null = await User.findOne({ _id });
-    if (!user) return null;
     return user;
   }
 
   static async findByEmail(email: string): Promise<IUser | null> {
     const user: IUser | null = await User.findOne({ email });
-    if (!user) return null;
     return user;
   }
 
-  static async create(userData: Omit<IUser, "_id">): Promise<IUser> {
+  static async create(userData: IUser): Promise<IUser> {
     const userModel = new User(userData);
     const user: IUser = await userModel.save();
     return user;
   }
 
   static async update(
-    _id: Types.ObjectId,
-    userData: Partial<Omit<IUser, "_id" | "email" | "role">>
-  ) {
-    const { name, password } = userData;
-    const user = await this.findById(_id);
-    if (!user) return null;
-
-    const fieldsToUpdate: IUser = {
-      _id,
-      name: name ?? user.name,
-      password: password ?? user.password,
-      email: user.email,
-      role: user.role,
-    };
-
-    const updatedUser = await User.updateOne({ _id }, fieldsToUpdate);
-    console.log(updatedUser);
+    _id: string,
+    userData: Partial<IUser>
+  ): Promise<IUser | null> {
+    const updatedUser: IUser | null = await User.findOneAndUpdate(
+      { _id },
+      { $set: userData },
+      { new: true, runValidators: true }
+    );
+    return updatedUser;
   }
 
-  static async delete(_id: Types.ObjectId) {
-    const user = await this.findById(_id);
-    if (!user) return null;
-    const deletedUser = await User.deleteOne({ _id });
-    console.log(deletedUser);
+  static async delete(_id: string): Promise<IUser | null> {
+    const deletedUser: IUser | null = await User.findByIdAndDelete({ _id });
+    return deletedUser;
   }
 }

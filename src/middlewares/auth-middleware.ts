@@ -3,16 +3,11 @@ import { HttpError } from "../errors/HttpError";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { UsersModel } from "../models/Users-model";
+import { IUser } from "../types/types";
 
 const decodedTokenSchema = z.object({
   email: z.string().email(),
 });
-
-interface IUser {
-  name: string;
-  email: string;
-  role: "admin" | "standard";
-}
 
 interface UserRequest extends Request {
   user?: IUser;

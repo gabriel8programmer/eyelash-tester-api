@@ -1,6 +1,5 @@
-import { IEyelash } from "../types";
+import { IEyelash } from "../types/types";
 import { Eyelash } from "./Eyelash-schema";
-import { Types } from "mongoose";
 
 export class EyelashesModel {
   static async findAll(): Promise<IEyelash[]> {
@@ -8,8 +7,8 @@ export class EyelashesModel {
     return eyelashes;
   }
 
-  static async findById(_id: Types.ObjectId): Promise<IEyelash | null> {
-    let eyelash: IEyelash | null = await Eyelash.findOne({ _id });
+  static async findById(_id: string): Promise<IEyelash | null> {
+    let eyelash: IEyelash | null = await Eyelash.findById({ _id });
     return eyelash;
   }
 
@@ -20,27 +19,21 @@ export class EyelashesModel {
   }
 
   static async update(
-    _id: Types.ObjectId,
-    data: Partial<Omit<IEyelash, "_id">>
-  ) {
-    const { name, imageUrl } = data;
-    const eyelash = await this.findById(_id);
-    if (!eyelash) return null;
-
-    const fieldsToUpdate: Partial<IEyelash> = {
-      _id: _id,
-      name: name ?? eyelash.name,
-      imageUrl: imageUrl ?? eyelash.imageUrl,
-    };
-
-    const eyelashUpdated = await Eyelash.updateOne({ _id }, fieldsToUpdate);
-    console.log(eyelashUpdated);
+    _id: string,
+    data: Partial<IEyelash>
+  ): Promise<IEyelash | null> {
+    const eyelashUpdated: IEyelash | null = await Eyelash.findOneAndUpdate(
+      { _id },
+      { $set: data },
+      { new: true, runValidators: true }
+    );
+    return eyelashUpdated;
   }
 
-  static async delete(_id: Types.ObjectId) {
-    const eyelash = this.findById(_id);
-    if (!eyelash) return null;
-    const deletedEyelash = await Eyelash.deleteOne({ _id });
-    console.log(deletedEyelash);
+  static async delete(_id: string): Promise<IEyelash | null> {
+    const deletedEyelash: IEyelash | null = await Eyelash.findByIdAndDelete({
+      _id,
+    });
+    return deletedEyelash;
   }
 }
