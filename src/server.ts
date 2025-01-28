@@ -16,7 +16,6 @@ dbConnect()
   .catch((err: Error) => console.error("Connection error:", err));
 
 app.use(express.json());
-
 app.use("/auth", authRouter);
 app.use("/admin/users", userRouter);
 app.use("/admin/eyelashes", eyelashRouter);
