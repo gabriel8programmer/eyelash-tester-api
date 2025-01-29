@@ -3,7 +3,9 @@ import { UserCreateSchema } from "../types/schema";
 import { UsersModel } from "../models/Users-model";
 import { HttpError } from "../errors/HttpError";
 import bcrypt from "bcrypt";
-import { IUser } from "../types/types";
+import { IEyelash, IUser } from "../types/types";
+import path from "node:path";
+import fs from "node:fs";
 
 export const createUser = async (
   data: z.infer<typeof UserCreateSchema>,
@@ -19,4 +21,15 @@ export const createUser = async (
   parsedData.role = role;
   const user = await UsersModel.create(parsedData);
   return user;
+};
+
+export const handleFile = (eyelash: IEyelash) => {
+  const pathOldImage = path.resolve(__dirname, `../../${eyelash.imageUrl}`);
+  fs.unlink(pathOldImage, (error) => {
+    if (error) {
+      console.log("Error when trying to delete file: ", error.message);
+      return;
+    }
+    console.log("File deleted with success!");
+  });
 };

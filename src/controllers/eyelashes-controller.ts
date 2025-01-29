@@ -2,8 +2,7 @@ import { Handler } from "express";
 import { EyelashesModel } from "../models/Eyelashes-model";
 import { HttpError } from "../errors/HttpError";
 import { z } from "zod";
-import fs from "fs";
-import path from "path";
+import { handleFile } from "../utils/usersHelpers";
 
 const EyelashCreateSchema = z.object({
   name: z.string(),
@@ -62,13 +61,7 @@ export class EyelashesController {
       // Se o usuário enviou uma nova imagem, devemos processá-la
       if (req.file) {
         // Excluir a imagem antiga da pasta de uploads (caso haja uma)
-        const oldImagePath = `${eyelash.imageUrl}`;
-        try {
-          const fs = require("fs");
-          fs.unlinkSync(oldImagePath);
-        } catch (err) {
-          console.error("Error deleting old image:", err);
-        }
+        handleFile(eyelash);
 
         // Atualize o `imageUrl` com o novo nome da imagem
         parsedBody.imageUrl = `${req.file.filename}`;
@@ -87,10 +80,7 @@ export class EyelashesController {
       const { id } = req.params;
       const eyelash = await EyelashesModel.findById(id);
       if (!eyelash) throw new HttpError(404, "Eyelash not found!");
-
-      const oldImagePath = `uploads/${eyelash.imageUrl}`;
-      const fs = require("fs");
-      fs.unlinkSync(oldImagePath);
+      handleFile(eyelash);
 
       const deletedEyelash = await EyelashesModel.delete(id);
       res.json(deletedEyelash);
