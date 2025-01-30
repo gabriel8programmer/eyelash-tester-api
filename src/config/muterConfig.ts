@@ -5,7 +5,7 @@ import path from "path";
 // Configuração do Multer para armazenar as imagens
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Diretório onde as imagens serão salvas
+    cb(null, path.resolve(__dirname, "../../uploads/")); // Diretório onde as imagens serão salvas
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname); // Obter a extensão do arquivo

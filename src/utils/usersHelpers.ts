@@ -24,8 +24,8 @@ export const createUser = async (
 };
 
 export const handleFile = (eyelash: IEyelash) => {
-  const pathOldImage = path.resolve(__dirname, `../../${eyelash.imageUrl}`);
-  fs.unlink(pathOldImage, (error) => {
+  const pathUpload = path.join("uploads", `${eyelash.imageUrl?.toString()}`);
+  fs.unlink(pathUpload, (error) => {
     if (error) {
       console.log("Error when trying to delete file: ", error.message);
       return;
