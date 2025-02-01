@@ -1,16 +1,21 @@
 import { z } from "zod";
 
 const UserBaseSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string(),
-  role: z.enum(["standard", "admin"]).default("standard"),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email format"),
+  password: z.string().min(6, "Password should be at least 6 characters"),
+  role: z.enum(["admin", "standard"]).default("standard"),
 });
 
-const UserCreateSchema = UserBaseSchema;
+export const EyelashSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  image: z.string(),
+});
 
-const UserUpdateSchema = UserBaseSchema.partial();
+export const EyelashUpdateSchema = EyelashSchema.partial();
 
-const LoginSchema = UserBaseSchema.pick({ email: true, password: true });
+export const UserCreateSchema = UserBaseSchema;
 
-export { UserCreateSchema, UserUpdateSchema, LoginSchema };
+export const UserUpdateSchema = UserBaseSchema.partial();
+
+export const LoginSchema = UserBaseSchema.pick({ email: true, password: true });

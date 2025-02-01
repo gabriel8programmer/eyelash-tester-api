@@ -1,24 +1,19 @@
 import { Handler } from "express";
 import { EyelashesModel } from "../models/Eyelashes-model";
 import { HttpError } from "../errors/HttpError";
-import { z } from "zod";
 import { deleteOldImage } from "../utils/usersHelpers";
-
-const EyelashCreateSchema = z.object({
-  name: z.string(),
-  imageUrl: z.string().url().optional(),
-});
-
-const EyelashUpdateSchema = EyelashCreateSchema.partial();
+import { EyelashSchema, EyelashUpdateSchema } from "../types/schema";
 
 export class EyelashesController {
-  //GET /api/admin/eyelashes
-  static index: Handler = async (req, res) => {
-    const eyelashes = await EyelashesModel.findAll();
-    res.json(eyelashes);
+  static index: Handler = async (req, res, next) => {
+    try {
+      const eyelashes = await EyelashesModel.findAll();
+      res.json(eyelashes);
+    } catch (error) {
+      next(error);
+    }
   };
 
-  //GET /api/admin/eyelashes/:id
   static show: Handler = async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -30,17 +25,12 @@ export class EyelashesController {
     }
   };
 
-  //POST /api/admin/eyelashes
   static create: Handler = async (req, res, next) => {
     try {
-      const parsedBody = EyelashCreateSchema.parse(req.body);
+      const parsedBody = EyelashSchema.parse(req.body);
 
-      // A imagem foi carregada com sucesso, então vamos pegar a URL
-      if (req.file) {
-        parsedBody.imageUrl = `${req.file.filename}`;
-      } else {
-        throw new HttpError(400, "Image is required.");
-      }
+      if (!req.file) throw new HttpError(400, "Image is required.");
+      parsedBody.image = req.file.filename;
 
       const newEyelash = await EyelashesModel.create(parsedBody);
       res.status(201).json(newEyelash);
@@ -49,22 +39,17 @@ export class EyelashesController {
     }
   };
 
-  //PUT /api/admin/eyelashes/:id
   static update: Handler = async (req, res, next) => {
     try {
       const parsedBody = EyelashUpdateSchema.parse(req.body);
-
       const { id } = req.params;
+
       const eyelash = await EyelashesModel.findById(id);
       if (!eyelash) throw new HttpError(404, "Eyelash not found!");
 
-      // Se o usuário enviou uma nova imagem, devemos processá-la
       if (req.file) {
-        // Excluir a imagem antiga da pasta de uploads (caso haja uma)
-        deleteOldImage(eyelash.imageUrl as string);
-
-        // Atualize o `imageUrl` com o novo nome da imagem
-        parsedBody.imageUrl = `${req.file.filename}`;
+        deleteOldImage(eyelash.image);
+        parsedBody.image = req.file.filename;
       }
 
       const updatedEyelash = await EyelashesModel.update(id, parsedBody);
@@ -74,14 +59,14 @@ export class EyelashesController {
     }
   };
 
-  //DELETE /api/admin/eyelashes/:id
   static delete: Handler = async (req, res, next) => {
     try {
       const { id } = req.params;
+
       const eyelash = await EyelashesModel.findById(id);
       if (!eyelash) throw new HttpError(404, "Eyelash not found!");
 
-      deleteOldImage(eyelash.imageUrl as string);
+      deleteOldImage(eyelash.image);
       const deletedEyelash = await EyelashesModel.delete(id);
       res.json(deletedEyelash);
     } catch (error) {

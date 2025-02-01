@@ -1,6 +1,8 @@
+import { Document, Types } from "mongoose";
 import { z } from "zod";
 
 interface IUser {
+  _id?: Types.ObjectId;
   name: string;
   email: string;
   password: string;
@@ -8,6 +10,7 @@ interface IUser {
 }
 
 interface IEyelash {
+  _id?: Types.ObjectId;
   name: string;
-  imageUrl?: string;
+  image: string;
 }

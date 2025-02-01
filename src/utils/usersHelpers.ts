@@ -8,9 +8,9 @@ import path from "node:path";
 import fs from "node:fs";
 
 export const createUser = async (
-  data: z.infer<typeof UserCreateSchema>,
-  role: "admin" | "standard"
-): Promise<IUser> => {
+  data: Omit<IUser, "id">,
+  role: "admin" | "standard" = "standard"
+) => {
   const parsedData = UserCreateSchema.parse(data);
 
   const { email } = parsedData;
@@ -19,8 +19,7 @@ export const createUser = async (
 
   parsedData.password = await bcrypt.hash(parsedData.password, 10);
   parsedData.role = role;
-  const user = await UsersModel.create(parsedData);
-  return user;
+  return await UsersModel.create(parsedData);
 };
 
 export const deleteOldImage = (imageUrl: string) => {

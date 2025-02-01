@@ -7,31 +7,31 @@ import { LoginSchema } from "../types/schema";
 import { createUser } from "../utils/usersHelpers";
 
 export class AuthController {
-  //POST /auth/register
   static register: Handler = async (req, res, next) => {
     try {
-      const user = await createUser(req.body, "standard");
+      const user = await createUser(req.body);
       res.status(201).json(user);
     } catch (error) {
       next(error);
     }
   };
 
-  //POST /auth/login
   static login: Handler = async (req, res, next) => {
     try {
       const bodyParsed = LoginSchema.parse(req.body);
-
       const { email, password } = bodyParsed;
       const user = await UsersModel.findByEmail(email);
+
       if (!user || !(await bcrypt.compare(password, user.password)))
         throw new HttpError(400, "Invalid credentials!");
 
-      const payload = { email: user?.email };
-      const jwtKey: any = process.env.API_JWT_SECRET_KEY;
+      const payload = { email: user.email, id: user._id };
+      const jwtKey = process.env.API_JWT_SECRET_KEY || "defaultSecretKey";
+
       const token = jwt.sign(payload, jwtKey, {
         expiresIn: "1d",
       });
+
       res.status(202).json({ token });
     } catch (error) {
       next(error);

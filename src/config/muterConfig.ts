@@ -1,19 +1,21 @@
-// multerConfig.ts
-import multer from "multer";
+import multer, { StorageEngine } from "multer";
 import path from "path";
 
-// Configuração do Multer para armazenar as imagens
-const storage = multer.diskStorage({
+const storage: StorageEngine = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.resolve(__dirname, "../../uploads/")); // Diretório onde as imagens serão salvas
+    cb(null, path.resolve(__dirname, "../../uploads/"));
   },
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname); // Obter a extensão do arquivo
-    cb(null, Date.now() + ext); // Nome único para o arquivo (timestamp + extensão)
+    const ext = path.extname(file.originalname);
+    cb(null, Date.now() + ext);
   },
 });
 
-// Instância do Multer
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
 
 export { upload };
