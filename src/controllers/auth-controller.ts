@@ -30,7 +30,7 @@ export class AuthController {
       const payload = { email: user?.email };
       const jwtKey: any = process.env.API_JWT_SECRET_KEY;
       const token = jwt.sign(payload, jwtKey, {
-        expiresIn: "1h",
+        expiresIn: "1d",
       });
       res.status(202).json({ token });
     } catch (error) {
