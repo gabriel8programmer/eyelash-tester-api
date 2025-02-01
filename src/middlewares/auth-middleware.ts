@@ -13,26 +13,34 @@ interface UserRequest extends Request {
   user?: IUser;
 }
 
-export class authMiddleware {
-  ensureAuth: Handler = async (req: UserRequest, res, next) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) throw new HttpError(400, "Invalid token!");
+export class AuthMiddleware {
+  static ensureAuth: Handler = async (req: UserRequest, res, next) => {
+    try {
+      const authHeader = req.headers.authorization;
+      if (!authHeader) throw new HttpError(400, "Invalid token!");
 
-    const token = authHeader.split(" ")[1];
-    const secretKey = process.env.API_JWT_SECRET_KEY as string;
-    const decodedToken = jwt.verify(token, secretKey);
-    const { email } = decodedTokenSchema.parse(decodedToken);
+      const token = authHeader.split(" ")[1];
+      const secretKey = process.env.API_JWT_SECRET_KEY as string;
+      const decodedToken = jwt.verify(token, secretKey);
+      const { email } = decodedTokenSchema.parse(decodedToken);
 
-    const user = await UsersModel.findByEmail(email);
-    if (!user) throw new HttpError(400, "Invalid token!");
-    req.user = user;
+      const user = await UsersModel.findByEmail(email);
+      if (!user) throw new HttpError(400, "Invalid token!");
+      req.user = user;
 
-    next();
+      next();
+    } catch (error) {
+      next(error);
+    }
   };
 
-  ensureIsAdmin: Handler = (req: UserRequest, res, next) => {
-    const { role } = req.user as any;
-    if (role === "admin") next();
-    else throw new HttpError(401, "User is not admin!");
+  static ensureIsAdmin: Handler = (req: UserRequest, res, next) => {
+    try {
+      const { role } = req.user as any;
+      if (role === "admin") next();
+      else throw new HttpError(401, "User is not admin!");
+    } catch (error) {
+      next(error);
+    }
   };
 }

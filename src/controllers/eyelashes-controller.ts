@@ -2,7 +2,7 @@ import { Handler } from "express";
 import { EyelashesModel } from "../models/Eyelashes-model";
 import { HttpError } from "../errors/HttpError";
 import { z } from "zod";
-import { handleFile } from "../utils/usersHelpers";
+import { deleteOldImage } from "../utils/usersHelpers";
 
 const EyelashCreateSchema = z.object({
   name: z.string(),
@@ -37,7 +37,7 @@ export class EyelashesController {
 
       // A imagem foi carregada com sucesso, então vamos pegar a URL
       if (req.file) {
-        parsedBody.imageUrl = `/uploads/${req.file.filename}`;
+        parsedBody.imageUrl = `${req.file.filename}`;
       } else {
         throw new HttpError(400, "Image is required.");
       }
@@ -61,7 +61,7 @@ export class EyelashesController {
       // Se o usuário enviou uma nova imagem, devemos processá-la
       if (req.file) {
         // Excluir a imagem antiga da pasta de uploads (caso haja uma)
-        handleFile(eyelash);
+        deleteOldImage(eyelash.imageUrl as string);
 
         // Atualize o `imageUrl` com o novo nome da imagem
         parsedBody.imageUrl = `${req.file.filename}`;
@@ -80,8 +80,8 @@ export class EyelashesController {
       const { id } = req.params;
       const eyelash = await EyelashesModel.findById(id);
       if (!eyelash) throw new HttpError(404, "Eyelash not found!");
-      handleFile(eyelash);
 
+      deleteOldImage(eyelash.imageUrl as string);
       const deletedEyelash = await EyelashesModel.delete(id);
       res.json(deletedEyelash);
     } catch (error) {
