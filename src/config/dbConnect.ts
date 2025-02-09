@@ -1,12 +1,9 @@
 import mongoose from "mongoose";
+import { envSchema } from "../types/schema";
 
 const dbConnect = async () => {
-  const dbPort = process.env.DB_PORT;
-  const dbHost = process.env.DB_HOST;
-  const db = process.env.DATABASE;
-  const dbUrl = `mongodb://${dbHost}:${dbPort}/${db}`;
-
-  await mongoose.connect(dbUrl);
+  const env = envSchema.parse(process.env);
+  return await mongoose.connect(env.MONGODB_URL_CON);
 };
 
 export default dbConnect;

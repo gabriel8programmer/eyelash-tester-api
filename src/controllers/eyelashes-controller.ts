@@ -27,7 +27,7 @@ export class EyelashesController {
 
   static create: Handler = async (req, res, next) => {
     try {
-      const parsedBody = EyelashSchema.parse(req.body);
+      const parsedBody = req.body;
 
       if (!req.file) throw new HttpError(400, "Image is required.");
       parsedBody.image = req.file.filename;
