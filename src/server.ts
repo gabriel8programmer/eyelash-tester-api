@@ -19,6 +19,10 @@ app.use("/api/auth", authRouter);
 app.use("/api/admin/users", userRouter);
 app.use("/api/admin/eyelashes", eyelashRouter);
 
+app.get("/", (req, res) => {
+  res.send("Bem vindo. Aqui é a primeira página da API!");
+});
+
 app.use(handlerError);
 
 const PORT = process.env.PORT || 3000;
