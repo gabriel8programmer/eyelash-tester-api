@@ -23,7 +23,7 @@ export const createUser = async (
 };
 
 export const deleteOldImage = (imageUrl: string) => {
-  const pathUpload = path.resolve(__dirname, "../../uploads", imageUrl);
+  const pathUpload = path.resolve(__dirname, "../uploads", imageUrl);
 
   // Verifique se o arquivo existe antes de tentar removê-lo
   fs.access(pathUpload, fs.constants.F_OK, (error) => {
