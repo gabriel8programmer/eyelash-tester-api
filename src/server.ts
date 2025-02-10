@@ -6,6 +6,7 @@ import { userRouter } from "./routes/users";
 import { eyelashRouter } from "./routes/eyelashes";
 import { handlerError } from "./middlewares/handler-error-middleware";
 import dbConnect from "./config/dbConnect";
+import { initializeUploadDirectory } from "./utils/usersHelpers";
 
 const app = express();
 
@@ -13,6 +14,9 @@ const app = express();
 dbConnect()
   .then(() => console.log("Connected to MongoDB"))
   .catch((err: Error) => console.error("Connection error:", err));
+
+//create directory of the uploads in the application
+initializeUploadDirectory();
 
 app.use(express.json());
 app.use("/api/auth", authRouter);

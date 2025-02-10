@@ -22,6 +22,13 @@ export const createUser = async (
   return await UsersModel.create(parsedData);
 };
 
+export const initializeUploadDirectory = () => {
+  const uploadRelativePath = path.resolve(__dirname, "..", "uploads");
+  if (!fs.existsSync(uploadRelativePath)) {
+    fs.mkdirSync(uploadRelativePath);
+  }
+};
+
 export const deleteOldImage = (imageUrl: string) => {
   const pathUpload = path.resolve(__dirname, "../uploads", imageUrl);
 
