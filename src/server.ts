@@ -3,7 +3,7 @@ require("dotenv").config();
 import express from "express";
 import { authRouter } from "./routes/auth";
 import { userRouter } from "./routes/users";
-import { eyelashRouter } from "./routes/eyelashes";
+import { eyelashRouter, eyelashRouterAdmin } from "./routes/eyelashes";
 import { handlerError } from "./middlewares/handler-error-middleware";
 import dbConnect from "./config/dbConnect";
 import { initializeUploadDirectory } from "./utils/usersHelpers";
@@ -22,13 +22,14 @@ dbConnect()
 initializeUploadDirectory();
 
 app.use(express.json());
+app.use("/api/eyelashes", eyelashRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/admin/users", userRouter);
-app.use("/api/admin/eyelashes", eyelashRouter);
+app.use("/api/admin/eyelashes", eyelashRouterAdmin);
 
 app.use(handlerError);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running in http://0.0.0.0:${PORT}/`);
+  console.log(`Server running in Port: ${PORT}/`);
 });

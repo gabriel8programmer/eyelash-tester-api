@@ -4,29 +4,30 @@ import { upload } from "../config/muterConfig";
 import { AuthMiddleware } from "../middlewares/auth-middleware";
 
 const eyelashRouter = express.Router();
+const eyelashRouterAdmin = express.Router();
 
 eyelashRouter.get("/", EyelashesController.index);
 eyelashRouter.get("/:id", EyelashesController.show);
 
-eyelashRouter.post(
+eyelashRouterAdmin.post(
   "/",
-  upload.single("imageUrl"),
+  upload.single("image"),
   AuthMiddleware.ensureAuth,
   AuthMiddleware.ensureIsAdmin,
   EyelashesController.create
 );
-eyelashRouter.put(
+eyelashRouterAdmin.put(
   "/:id",
-  upload.single("imageUrl"),
+  upload.single("image"),
   AuthMiddleware.ensureAuth,
   AuthMiddleware.ensureIsAdmin,
   EyelashesController.update
 );
-eyelashRouter.delete(
+eyelashRouterAdmin.delete(
   "/:id",
   AuthMiddleware.ensureAuth,
   AuthMiddleware.ensureIsAdmin,
   EyelashesController.delete
 );
 
-export { eyelashRouter };
+export { eyelashRouter, eyelashRouterAdmin };
