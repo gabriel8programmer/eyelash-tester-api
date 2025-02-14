@@ -7,8 +7,11 @@ import { eyelashRouter } from "./routes/eyelashes";
 import { handlerError } from "./middlewares/handler-error-middleware";
 import dbConnect from "./config/dbConnect";
 import { initializeUploadDirectory } from "./utils/usersHelpers";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors());
 
 //connect with the database
 dbConnect()

@@ -5,18 +5,9 @@ import { AuthMiddleware } from "../middlewares/auth-middleware";
 
 const eyelashRouter = express.Router();
 
-eyelashRouter.get(
-  "/",
-  AuthMiddleware.ensureAuth,
-  AuthMiddleware.ensureIsAdmin,
-  EyelashesController.index
-);
-eyelashRouter.get(
-  "/:id",
-  AuthMiddleware.ensureAuth,
-  AuthMiddleware.ensureIsAdmin,
-  EyelashesController.show
-);
+eyelashRouter.get("/", EyelashesController.index);
+eyelashRouter.get("/:id", EyelashesController.show);
+
 eyelashRouter.post(
   "/",
   upload.single("imageUrl"),
