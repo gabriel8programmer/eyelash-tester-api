@@ -26,9 +26,9 @@ export class AuthController {
         throw new HttpError(400, "Invalid credentials!");
 
       const payload = { email: user.email, id: user._id };
-      const jwtKey = process.env.API_JWT_SECRET_KEY || "defaultSecretKey";
+      const jwtKey = process.env.API_JWT_SECRET_KEY;
 
-      const token = jwt.sign(payload, jwtKey, {
+      const token = jwt.sign(payload, jwtKey as string, {
         expiresIn: "1d",
       });
 

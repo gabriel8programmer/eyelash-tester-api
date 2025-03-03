@@ -5,7 +5,7 @@ import { authRouter } from "./routes/auth";
 import { userRouter } from "./routes/users";
 import { eyelashRouter, eyelashRouterAdmin } from "./routes/eyelashes";
 import { handlerError } from "./middlewares/handler-error-middleware";
-import dbConnect from "./config/dbConnect";
+import database from "./config/database";
 import { initializeUploadDirectory } from "./utils/usersHelpers";
 import cors from "cors";
 
@@ -14,7 +14,7 @@ const app = express();
 app.use(cors());
 
 //connect with the database
-dbConnect()
+database()
   .then(() => console.log("Connected to MongoDB"))
   .catch((err: Error) => console.error("Connection error:", err));
 

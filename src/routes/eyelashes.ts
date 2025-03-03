@@ -1,6 +1,6 @@
 import express from "express";
 import { EyelashesController } from "../controllers/eyelashes-controller";
-import { upload } from "../config/muterConfig";
+import { upload } from "../config/muter";
 import { AuthMiddleware } from "../middlewares/auth-middleware";
 
 const eyelashRouter = express.Router();

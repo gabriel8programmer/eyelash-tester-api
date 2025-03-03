@@ -49,3 +49,5 @@ export const deleteOldImage = (imageUrl: string) => {
     });
   });
 };
+
+export const generateNewJwtToken = () => {};
