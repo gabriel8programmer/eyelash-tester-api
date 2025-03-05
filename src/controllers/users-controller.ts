@@ -1,5 +1,5 @@
 import { Handler } from "express";
-import { UsersModel } from "../models/Users-model";
+import { User } from "../models/User";
 import { HttpError } from "../errors/HttpError";
 import bcrypt from "bcrypt";
 import { UserUpdateSchema } from "../types/schema";
@@ -8,7 +8,7 @@ import { createUser } from "../utils/usersHelpers";
 export class UsersController {
   static index: Handler = async (req, res, next) => {
     try {
-      const users = await UsersModel.findAll();
+      const users = await User.findAll();
       res.json(users);
     } catch (error) {
       next(error);
@@ -18,7 +18,7 @@ export class UsersController {
   static show: Handler = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const user = await UsersModel.findById(id);
+      const user = await User.findById(id);
       if (!user) throw new HttpError(404, "User not found!");
       res.json(user);
     } catch (error) {
@@ -40,14 +40,14 @@ export class UsersController {
     try {
       const parsedBody = UserUpdateSchema.parse(req.body);
       const { id } = req.params;
-      const user = await UsersModel.findById(id);
+      const user = await User.findById(id);
       if (!user) throw new HttpError(404, "User not found!");
 
       const { password } = parsedBody;
       parsedBody.password =
         typeof password === "string" ? await bcrypt.hash(password, 10) : user.password;
 
-      const userUpdated = await UsersModel.update(id, parsedBody);
+      const userUpdated = await User.update(id, parsedBody);
       res.json(userUpdated);
     } catch (error) {
       next(error);
@@ -57,10 +57,10 @@ export class UsersController {
   static delete: Handler = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const user = await UsersModel.findById(id);
+      const user = await User.findById(id);
       if (!user) throw new HttpError(404, "User not found!");
 
-      const deletedUser = await UsersModel.delete(id);
+      const deletedUser = await User.delete(id);
       res.json(deletedUser);
     } catch (error) {
       next(error);

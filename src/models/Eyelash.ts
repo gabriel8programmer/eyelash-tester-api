@@ -1,22 +1,22 @@
 import { IEyelash } from "../types/types";
-import { Eyelash } from "./Eyelash-schema";
+import { EyelashModel } from "./Schemas";
 
-export class EyelashesModel {
+export class Eyelash {
   static async findAll(): Promise<IEyelash[]> {
-    return await Eyelash.find({});
+    return await EyelashModel.find({});
   }
 
   static async findById(_id: string): Promise<IEyelash | null> {
-    return await Eyelash.findById({ _id });
+    return await EyelashModel.findById({ _id });
   }
 
   static async create(eyelashData: IEyelash): Promise<IEyelash> {
-    const eyelashModel = new Eyelash(eyelashData);
+    const eyelashModel = new EyelashModel(eyelashData);
     return await eyelashModel.save();
   }
 
   static async update(_id: string, data: Partial<IEyelash>): Promise<IEyelash | null> {
-    return await Eyelash.findOneAndUpdate(
+    return await EyelashModel.findOneAndUpdate(
       { _id },
       { $set: data },
       { new: true, runValidators: true }
@@ -24,7 +24,7 @@ export class EyelashesModel {
   }
 
   static async delete(_id: string): Promise<IEyelash | null> {
-    return await Eyelash.findByIdAndDelete({
+    return await EyelashModel.findByIdAndDelete({
       _id,
     });
   }

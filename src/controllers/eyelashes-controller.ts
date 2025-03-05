@@ -1,13 +1,13 @@
 import { Handler } from "express";
-import { EyelashesModel } from "../models/Eyelashes-model";
 import { HttpError } from "../errors/HttpError";
 import { deleteOldImage } from "../utils/usersHelpers";
-import { EyelashSchema, EyelashUpdateSchema } from "../types/schema";
+import { EyelashUpdateSchema } from "../types/schema";
+import { Eyelash } from "../models/Eyelash";
 
 export class EyelashesController {
   static index: Handler = async (req, res, next) => {
     try {
-      const eyelashes = await EyelashesModel.findAll();
+      const eyelashes = await Eyelash.findAll();
       res.json(eyelashes);
     } catch (error) {
       next(error);
@@ -17,7 +17,7 @@ export class EyelashesController {
   static show: Handler = async (req, res, next) => {
     try {
       const { id } = req.params;
-      const eyelash = await EyelashesModel.findById(id);
+      const eyelash = await Eyelash.findById(id);
       if (!eyelash) throw new HttpError(404, "Eyelash not found!");
       res.json(eyelash);
     } catch (error) {
@@ -32,7 +32,7 @@ export class EyelashesController {
       if (!req.file) throw new HttpError(400, "Image is required.");
       parsedBody.image = req.file.filename;
 
-      const newEyelash = await EyelashesModel.create(parsedBody);
+      const newEyelash = await Eyelash.create(parsedBody);
       res.status(201).json(newEyelash);
     } catch (error) {
       next(error);
@@ -44,7 +44,7 @@ export class EyelashesController {
       const parsedBody = EyelashUpdateSchema.parse(req.body);
       const { id } = req.params;
 
-      const eyelash = await EyelashesModel.findById(id);
+      const eyelash = await Eyelash.findById(id);
       if (!eyelash) throw new HttpError(404, "Eyelash not found!");
 
       if (req.file) {
@@ -52,7 +52,7 @@ export class EyelashesController {
         parsedBody.image = req.file.filename;
       }
 
-      const updatedEyelash = await EyelashesModel.update(id, parsedBody);
+      const updatedEyelash = await Eyelash.update(id, parsedBody);
       res.json(updatedEyelash);
     } catch (error) {
       next(error);
@@ -63,11 +63,11 @@ export class EyelashesController {
     try {
       const { id } = req.params;
 
-      const eyelash = await EyelashesModel.findById(id);
+      const eyelash = await Eyelash.findById(id);
       if (!eyelash) throw new HttpError(404, "Eyelash not found!");
 
       deleteOldImage(eyelash.image);
-      const deletedEyelash = await EyelashesModel.delete(id);
+      const deletedEyelash = await Eyelash.delete(id);
       res.json(deletedEyelash);
     } catch (error) {
       next(error);

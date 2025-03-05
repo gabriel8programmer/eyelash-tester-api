@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { UserCreateSchema } from "../types/schema";
-import { UsersModel } from "../models/Users-model";
+import { UsersModel } from "../models/User";
 import { HttpError } from "../errors/HttpError";
 import bcrypt from "bcrypt";
 import { IUser } from "../types/types";

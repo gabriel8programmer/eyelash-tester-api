@@ -1,26 +1,21 @@
 import { Handler } from "express";
 import jwt from "jsonwebtoken";
-import { UsersModel } from "../models/Users-model";
+import { User } from "../models/User";
 import bcrypt from "bcrypt";
 import { HttpError } from "../errors/HttpError";
 import { LoginSchema } from "../types/schema";
-import { createUser } from "../utils/usersHelpers";
 
 export class AuthController {
-  static register: Handler = async (req, res, next) => {
-    try {
-      const user = await createUser(req.body);
-      res.status(201).json(user);
-    } catch (error) {
-      next(error);
-    }
+  static verifyEmail: Handler = async (req, res) => {
+    const { email } = req.body;
+    res.json({ message: "Email verified successfully!", email });
   };
 
   static login: Handler = async (req, res, next) => {
     try {
       const bodyParsed = LoginSchema.parse(req.body);
       const { email, password } = bodyParsed;
-      const user = await UsersModel.findByEmail(email);
+      const user = await User.findByEmail(email);
 
       if (!user || !(await bcrypt.compare(password, user.password)))
         throw new HttpError(400, "Invalid credentials!");
@@ -37,4 +32,6 @@ export class AuthController {
       next(error);
     }
   };
+
+  static recoverPassword: Handler = async (req, res) => {};
 }

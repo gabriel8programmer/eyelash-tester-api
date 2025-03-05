@@ -1,26 +1,26 @@
+import { UserModel } from "./Schemas";
 import { IUser } from "../types/types";
-import { User } from "./User-schema";
 
-export class UsersModel {
+export class User {
   static async findAll(): Promise<IUser[]> {
-    return await User.find({});
+    return await UserModel.find({});
   }
 
   static async findById(_id: string): Promise<IUser | null> {
-    return await User.findOne({ _id });
+    return await UserModel.findOne({ _id });
   }
 
   static async findByEmail(email: string): Promise<IUser | null> {
-    return await User.findOne({ email });
+    return await UserModel.findOne({ email });
   }
 
   static async create(userData: IUser): Promise<IUser> {
-    const userModel = new User(userData);
-    return await userModel.save();
+    const model = new UserModel(userData);
+    return await model.save();
   }
 
   static async update(_id: string, userData: Partial<IUser>): Promise<IUser | null> {
-    return await User.findOneAndUpdate(
+    return await UserModel.findOneAndUpdate(
       { _id },
       { $set: userData },
       { new: true, runValidators: true }
@@ -28,6 +28,6 @@ export class UsersModel {
   }
 
   static async delete(_id: string): Promise<IUser | null> {
-    return await User.findByIdAndDelete({ _id });
+    return await UserModel.findByIdAndDelete({ _id });
   }
 }

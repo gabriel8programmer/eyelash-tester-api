@@ -2,19 +2,21 @@ import { Handler, Request } from "express";
 import { HttpError } from "../errors/HttpError";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
-import { UsersModel } from "../models/Users-model";
+import { User } from "../models/User";
 import { IUser } from "../types/types";
 
 const decodedTokenSchema = z.object({
   email: z.string().email(),
 });
 
-interface UserRequest extends Request {
-  user?: IUser;
+declare module "express" {
+  export interface Request {
+    user?: IUser;
+  }
 }
 
 export class AuthMiddleware {
-  static ensureAuth: Handler = async (req: UserRequest, res, next) => {
+  static ensureAuth: Handler = async (req: Request, res, next) => {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader) throw new HttpError(400, "Invalid token!");
@@ -24,7 +26,7 @@ export class AuthMiddleware {
       const decodedToken = jwt.verify(token, secretKey);
       const { email } = decodedTokenSchema.parse(decodedToken);
 
-      const user = await UsersModel.findByEmail(email);
+      const user = await User.findByEmail(email);
       if (!user) throw new HttpError(400, "Invalid token!");
       req.user = user;
 
@@ -34,10 +36,10 @@ export class AuthMiddleware {
     }
   };
 
-  static ensureIsAdmin: Handler = (req: UserRequest, res, next) => {
+  static ensureIsAdmin: Handler = (req: Request, res, next) => {
     try {
-      const { role } = req.user as any;
-      if (role === "admin") next();
+      const { user } = req;
+      if (user?.role === "admin") next();
       else throw new HttpError(401, "User is not admin!");
     } catch (error) {
       next(error);

@@ -4,7 +4,7 @@ const UserBaseSchema = z.object({
   name: z.string().min(1, "Name is required"),
   email: z.string().email("Invalid email format"),
   password: z.string().min(6, "Password should be at least 6 characters"),
-  role: z.enum(["admin", "standard"]).default("standard"),
+  role: z.string().default("admin"),
 });
 
 export const EyelashSchema = z.object({

@@ -6,7 +6,7 @@ interface IUser {
   name: string;
   email: string;
   password: string;
-  role: "admin" | "standard";
+  role?: string;
 }
 
 interface IEyelash {
