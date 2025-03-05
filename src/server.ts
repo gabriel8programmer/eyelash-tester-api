@@ -6,7 +6,7 @@ import { userRouter } from "./routes/users";
 import { eyelashRouter, eyelashRouterAdmin } from "./routes/eyelashes";
 import { handlerError } from "./middlewares/handler-error-middleware";
 import database from "./config/database";
-import { initializeUploadDirectory } from "./utils/usersHelpers";
+import { initializeUploadDirectory } from "./utils/users";
 import cors from "cors";
 
 const app = express();

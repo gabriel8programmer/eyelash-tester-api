@@ -2,8 +2,8 @@ import { Handler, Request } from "express";
 import { HttpError } from "../errors/HttpError";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
-import { User } from "../models/User";
 import { IUser } from "../types/types";
+import { validateUserByEmail } from "../utils/users";
 
 const decodedTokenSchema = z.object({
   email: z.string().email(),
@@ -26,8 +26,7 @@ export class AuthMiddleware {
       const decodedToken = jwt.verify(token, secretKey);
       const { email } = decodedTokenSchema.parse(decodedToken);
 
-      const user = await User.findByEmail(email);
-      if (!user) throw new HttpError(400, "Invalid token!");
+      const user = await validateUserByEmail(email);
       req.user = user;
 
       next();

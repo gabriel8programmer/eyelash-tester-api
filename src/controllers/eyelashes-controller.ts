@@ -1,6 +1,6 @@
 import { Handler } from "express";
 import { HttpError } from "../errors/HttpError";
-import { deleteOldImage } from "../utils/usersHelpers";
+import { deleteOldImage } from "../utils/users";
 import { EyelashUpdateSchema } from "../types/schema";
 import { Eyelash } from "../models/Eyelash";
 

@@ -3,7 +3,7 @@ import { User } from "../models/User";
 import { HttpError } from "../errors/HttpError";
 import bcrypt from "bcrypt";
 import { UserUpdateSchema } from "../types/schema";
-import { createUser } from "../utils/usersHelpers";
+import { createUser } from "../utils/users";
 
 export class UsersController {
   static index: Handler = async (req, res, next) => {

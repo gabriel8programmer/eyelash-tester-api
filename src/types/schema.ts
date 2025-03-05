@@ -12,12 +12,6 @@ export const EyelashSchema = z.object({
   image: z.string(),
 });
 
-export const envSchema = z.object({
-  PORT: z.string(),
-  API_JWT_SECRET_KEY: z.string(),
-  MONGODB_URL_CON: z.string(),
-});
-
 export const EyelashUpdateSchema = EyelashSchema.partial();
 
 export const UserCreateSchema = UserBaseSchema;

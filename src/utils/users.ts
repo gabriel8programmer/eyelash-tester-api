@@ -1,11 +1,16 @@
-import { z } from "zod";
 import { UserCreateSchema } from "../types/schema";
-import { UsersModel } from "../models/User";
+import { User } from "../models/User";
 import { HttpError } from "../errors/HttpError";
 import bcrypt from "bcrypt";
 import { IUser } from "../types/types";
 import path from "node:path";
 import fs from "node:fs";
+
+export const validateUserByEmail = async (email: string): Promise<IUser> => {
+  const user = await User.findByEmail(email);
+  if (!user) throw new HttpError(404, "User not found!");
+  return user;
+};
 
 export const createUser = async (
   data: Omit<IUser, "id">,
@@ -14,12 +19,12 @@ export const createUser = async (
   const parsedData = UserCreateSchema.parse(data);
 
   const { email } = parsedData;
-  const emailIsAlreadyInUse = await UsersModel.findByEmail(email);
+  const emailIsAlreadyInUse = await User.findByEmail(email);
   if (emailIsAlreadyInUse) throw new HttpError(401, "Email is already in use!");
 
   parsedData.password = await bcrypt.hash(parsedData.password, 10);
   parsedData.role = role;
-  return await UsersModel.create(parsedData);
+  return await User.create(parsedData);
 };
 
 export const initializeUploadDirectory = () => {
@@ -49,5 +54,3 @@ export const deleteOldImage = (imageUrl: string) => {
     });
   });
 };
-
-export const generateNewJwtToken = () => {};

@@ -30,7 +30,19 @@ const EyelashSchema = new mongoose.Schema({
   },
 });
 
+const CodeSchema = new mongoose.Schema({
+  code: {
+    type: Number,
+    required: true,
+  },
+  expiresAt: {
+    type: Number,
+    default: () => Date.now() + 10 * 60 * 1000, //expira por padrão em 10 minutos
+  },
+});
+
 const UserModel = mongoose.model("User", UserSchema);
 const EyelashModel = mongoose.model("Eyelash", EyelashSchema);
+const CodeModel = mongoose.model("Code", CodeSchema);
 
-export { UserModel, EyelashModel };
+export { UserModel, EyelashModel, CodeModel };
